@@ -56,7 +56,7 @@ def f_ImageDataCallBack(bgrMat: Mat, myWin: "AppMainWindow") -> None:
 
             myFile = myDir.filePath(now.toString("hh_mm_ss") + ".mp4")
             codec = VideoWriter.fourcc(*"mp4v")
-            fps = 13
+            fps = 25
             frameSize = (width, height)
 
             myWin.writer.open(myFile, codec, fps, frameSize)
