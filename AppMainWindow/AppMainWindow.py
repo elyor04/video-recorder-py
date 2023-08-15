@@ -18,8 +18,6 @@ from HKIPcamera import HKIPcamera
 from cv2 import VideoWriter, Mat, resize, INTER_AREA
 from sys import exit as sys_exit, argv as sys_argv
 
-DURATION = 1  # recording minute
-
 
 def mkdir_cd(path: QDir, dirName: str) -> bool:
     path.mkdir(dirName)
@@ -134,11 +132,13 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
         self.trayIcon.show()
 
         def myTimer():
-            now = QDateTime.currentDateTime()
-            sec = DURATION * 60 - int(now.toString("ss"))
-            self.myTm.stop()
-            self.myTm.start((sec + 1) * 1000)
-            self.reOpen = True
+            if self.isReady:
+                now = QDateTime.currentDateTime()
+                sec = self.duration.value() * 60 - int(now.toString("ss"))
+                self.myTm.start((sec + 1) * 1000)
+                self.reOpen = True
+            else:
+                self.myTm.start(10)
 
         self.myTm.timeout.connect(myTimer)
         self.myTm.start(10)
