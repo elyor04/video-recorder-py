@@ -16,7 +16,7 @@ from ctypes import (
     CFUNCTYPE,
 )
 from time import time, sleep
-from cv2 import Mat, cvtColor, COLOR_YUV2BGR_YV12
+from cv2 import ocl, UMat, cvtColor, COLOR_YUV2BGR_YV12
 from numpy import frombuffer, uint8
 from typing import Any
 
@@ -101,7 +101,7 @@ class FRAME_INFO(Structure):
     ]
 
 
-def _f(bgrMat: Mat, pUser: Any) -> None:
+def _f(bgrUMat: UMat, pUser: Any) -> None:
     pass
 
 
@@ -110,13 +110,13 @@ IMAGEDATACALLBACK = type(_f)
 _hkipc: "HKIPcamera" = None
 
 
-def yv12toBGRMat(inYv12: POINTER(c_char), width: c_int, height: c_int) -> Mat:
+def yv12toBGRMat(inYv12: POINTER(c_char), width: c_int, height: c_int) -> UMat:
     yuvHeight = int(height * 3 / 2)
     bufLen = int(width * yuvHeight)
     yv12Bytes = bytes(cast(inYv12, POINTER(c_char * bufLen)).contents)
     yv12Array = frombuffer(yv12Bytes, dtype=uint8)
     yv12Array = yv12Array.reshape((yuvHeight, width))
-    return cvtColor(yv12Array, COLOR_YUV2BGR_YV12)
+    return cvtColor(UMat(yv12Array), COLOR_YUV2BGR_YV12)
 
 
 @CFUNCTYPE(None, c_int, POINTER(c_char), c_int, POINTER(FRAME_INFO), c_void_p, c_int)
@@ -137,8 +137,8 @@ def DecCBFun(
     if _hkipc.fImageDataCallBack_ is None:
         return
     if frameInfo.nType == T_YV12:
-        bgrMat = yv12toBGRMat(pBuf, frameInfo.nWidth, frameInfo.nHeight)
-        _hkipc.fImageDataCallBack_(bgrMat, _hkipc.pUser_)
+        bgrUMat = yv12toBGRMat(pBuf, frameInfo.nWidth, frameInfo.nHeight)
+        _hkipc.fImageDataCallBack_(bgrUMat, _hkipc.pUser_)
 
 
 @CFUNCTYPE(None, LONG, DWORD, POINTER(BYTE), DWORD, c_void_p)
@@ -198,6 +198,7 @@ class HKIPcamera:
         playSdkPath = join(dirname(__file__), "lib", "libPlayCtrl.so")
         self.netSdk = CDLL(netSdkPath)
         self.playSdk = CDLL(playSdkPath)
+        ocl.setUseOpenCL(True)
 
         self.user_id_ = -1
         self.lRealPlayHandle_ = -1

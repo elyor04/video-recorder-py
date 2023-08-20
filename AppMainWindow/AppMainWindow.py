@@ -15,7 +15,7 @@ from PyQt6.QtGui import QImage, QPixmap, QAction
 from PyQt6.QtCore import QDir, QTimer, QDateTime, QFileInfo
 from .ui_form import Ui_MainWindow
 from HKIPcamera import HKIPcamera
-from cv2 import VideoWriter, Mat, resize, INTER_AREA
+from cv2 import ocl, VideoWriter, UMat, resize, INTER_AREA
 from sys import exit as sys_exit, argv as sys_argv
 
 
@@ -24,19 +24,19 @@ def mkdir_cd(path: QDir, dirName: str) -> bool:
     return path.cd(dirName)
 
 
-def cvMatToQImage(inMat: Mat) -> QImage:
-    height, width, channel = inMat.shape
+def cvMatToQImage(inMat: UMat) -> QImage:
+    height, width, channel = inMat.get().shape
     bytesPerLine = 3 * width
-    qImg = QImage(inMat.data, width, height, bytesPerLine, QImage.Format.Format_RGB888)
+    qImg = QImage(inMat.get().data, width, height, bytesPerLine, QImage.Format.Format_RGB888)
     return qImg.rgbSwapped()
 
 
-def cvMatToQPixmap(inMat: Mat) -> QPixmap:
+def cvMatToQPixmap(inMat: UMat) -> QPixmap:
     return QPixmap.fromImage(cvMatToQImage(inMat))
 
 
-def f_ImageDataCallBack(bgrMat: Mat, myWin: "AppMainWindow") -> None:
-    height, width, channel = bgrMat.shape
+def f_ImageDataCallBack(bgrUMat: UMat, myWin: "AppMainWindow") -> None:
+    height, width, channel = bgrUMat.get().shape
 
     if myWin.reOpen:
         if myWin.writer.isOpened():
@@ -60,18 +60,18 @@ def f_ImageDataCallBack(bgrMat: Mat, myWin: "AppMainWindow") -> None:
             myWin.writer.open(myFile, codec, fps, frameSize)
 
         else:
-            myWin.writer.write(bgrMat)
+            myWin.writer.write(bgrUMat)
 
     elif myWin.writer.isOpened():
         myWin.writer.release()
 
     if myWin.tabWidget.currentIndex() == 1:
-        smallMat = resize(
-            bgrMat,
+        bgrUMat = resize(
+            bgrUMat,
             (myWin.videoLabel.width(), myWin.videoLabel.height()),
             interpolation=INTER_AREA,
         )
-        myWin.videoLabel.setPixmap(cvMatToQPixmap(smallMat))
+        myWin.videoLabel.setPixmap(cvMatToQPixmap(bgrUMat))
 
 
 class AppMainWindow(QMainWindow, Ui_MainWindow):
@@ -91,6 +91,7 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
 
         self.setupUi(self)
         self._init()
+        ocl.setUseOpenCL(True)
 
     def __del__(self) -> None:
         self.hkipc.release()
