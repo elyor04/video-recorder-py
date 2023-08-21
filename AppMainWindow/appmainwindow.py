@@ -1,5 +1,5 @@
 """
-pyuic6 -o ui_form.py "/home/user/Documents/qt-projects/ip-cam/mainwindow.ui"
+pyuic6 -o AppMainWindow/ui_form.py "path/to/file.ui"
 """
 from PyQt6.QtWidgets import (
     QApplication,

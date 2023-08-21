@@ -1,1 +1,1 @@
-from .HKIPcamera import HKIPcamera
+from .hkipcamera import HKIPcamera
