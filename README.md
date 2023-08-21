@@ -1,4 +1,4 @@
-# hikvision-ip-cam-recorder
+# hikvision-ip-camera-video-recorder (python)
 ## for linux 64-bit
 
 ```
