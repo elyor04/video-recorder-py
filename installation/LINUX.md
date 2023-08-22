@@ -1,4 +1,4 @@
-#!/bin/sh
+## To install required libraries
 
 Go to home directory
 ```
