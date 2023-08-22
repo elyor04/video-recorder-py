@@ -1,11 +1,11 @@
 ## To install required libraries
 
-Go to home directory
+Open you termina and go to home directory
 ```
 cd ~
 ```
 
-# Update your system
+Update your system
 ```
 sudo apt-get update && sudo apt-get -y upgrade
 ```
