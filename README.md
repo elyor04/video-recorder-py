@@ -2,7 +2,7 @@
 ## for linux 64-bit
 
 ```
-sudo apt-get -y install intel-opencl-icd ocl-icd-opencl-dev clinfo
+sudo apt-get -y install intel-opencl-icd ocl-icd-opencl-dev clinfo python3-pip
 ```
 ```
 clinfo -l
