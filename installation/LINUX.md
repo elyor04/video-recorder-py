@@ -17,7 +17,7 @@ sudo apt-get -y install intel-opencl-icd opencl-headers ocl-icd-libopencl1 ocl-i
 
 Install dependencies
 ```
-sudo apt-get -y install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev python3-dev python3-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libxvidcore-dev libx264-dev && sudo apt-get -y install ffmpeg python3-pip
+sudo apt-get -y install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev python3-dev python3-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libxvidcore-dev libx264-dev libdc1394-dev && sudo apt-get -y install ffmpeg python3-pip
 ```
 
 Get OpenCV from the official repository
