@@ -17,7 +17,7 @@ sudo apt-get -y install intel-opencl-icd ocl-icd-opencl-dev clinfo && clinfo -l
 
 Install dependencies
 ```
-sudo apt-get -y install build-essential cmake git pkg-config libgtk-3-dev libavcodec-dev libavformat-dev libswscale-dev libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libopenexr-dev libjasper-dev libv4l-dev libxvidcore-dev libx264-dev libatlas-base-dev gfortran python3-dev python3-pip
+sudo apt-get -y install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev && sudo apt-get -y install python3-dev python3-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev python3-pip && sudo apt-get -y install ffmpeg
 ```
 
 Get OpenCV from the official repository
@@ -32,7 +32,7 @@ mkdir build && cd build
 
 Run cmake with OpenCL enabled
 ```
-cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_OPENCL=ON -D WITH_FFMPEG=ON -D WITH_FAST_MATH=ON -D WITH_QT=ON -D BUILD_opencv_python3=ON -D BUILD_opencv_python2=OFF -D PYTHON_DEFAULT_EXECUTABLE=$(which python3) ..
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_OPENCL=ON -D WITH_FFMPEG=ON -D ENABLE_FAST_MATH=1 -D WITH_QT=ON -D BUILD_opencv_python3=ON ..
 ```
 
 Build and install OpenCV
