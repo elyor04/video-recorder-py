@@ -1,9 +1,3 @@
 # hikvision-ip-camera-video-recorder (python)
 
-### for linux
-```
-chmod +x ./installation/linux.sh
-```
-```
-./installation/linux.sh
-```
+### [install required libraries](https://github.com/elyor04/video-recorder-py/blob/main/installation/LINUX.md)
