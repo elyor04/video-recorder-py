@@ -37,7 +37,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_OPE
 
 Build and install OpenCV
 ```
-make -j$(nproc) && sudo make install
+make -j$(nproc) && sudo make install && cd ~
 ```
 
 Verify OpenCV Installation
