@@ -1,6 +1,6 @@
 ## To install required libraries
 
-Open you termina and go to home directory
+Open your terminal and go to home directory
 ```
 cd ~
 ```
