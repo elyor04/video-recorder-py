@@ -10,14 +10,14 @@ Update your system
 sudo apt-get update && sudo apt-get -y upgrade
 ```
 
-Install intel gpu driver and library (WARNING: if you don't have intel gpu, please skip this part)
+Install intel gpu driver and libraries (WARNING: if you don't have intel gpu, please skip this part)
 ```
-sudo apt-get -y install intel-opencl-icd ocl-icd-opencl-dev clinfo && clinfo -l
+sudo apt-get -y install intel-opencl-icd opencl-headers ocl-icd-libopencl1 ocl-icd-opencl-dev clinfo && clinfo -l
 ```
 
 Install dependencies
 ```
-sudo apt-get -y install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev && sudo apt-get -y install python3-dev python3-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libx264-dev libtiff-dev libjasper-dev libdc1394-22-dev python3-pip && sudo apt-get -y install ffmpeg
+sudo apt-get -y install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev python3-dev python3-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libx264-dev libxvidcore-dev libtiff-dev && sudo apt-get -y install ffmpeg python3-pip
 ```
 
 Get OpenCV from the official repository
