@@ -12,7 +12,7 @@ sudo apt -y install intel-opencl-icd opencl-headers ocl-icd-libopencl1 ocl-icd-o
 
 Install the libraries
 ```
-pip install --upgrade numpy opencv-python "PyQt6-sip<13.5" "PyQt6-Qt6<6.5" "PyQt6=<6.5"
+pip install --upgrade numpy opencv-python "PyQt6-sip<13.5" "PyQt6-Qt6<6.5" "PyQt6<6.5"
 ```
 
 Install dependencies
