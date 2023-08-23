@@ -7,4 +7,4 @@
 </div>
 
 ## Install required libraries
-#### [for linux](https://github.com/elyor04/video-recorder-py/blob/main/installation/LINUX.md)
+### [for linux](installation/LINUX.md)
