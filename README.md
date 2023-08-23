@@ -11,7 +11,7 @@
 </div>
 
 
-## To install required libraries on linux
+## To install required libraries on Linux
 
 ### Update your system and install pip
 ```
@@ -31,7 +31,7 @@ pip install --upgrade numpy opencv-python "PyQt6-sip<13.5" "PyQt6-Qt6<6.5" "PyQt
 ```
 
 
-## To install required libraries on windows
+## To install required libraries on Windows
 
 ### Install the libraries
 ```
