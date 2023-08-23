@@ -5,7 +5,9 @@ Update your system and install pip
 sudo apt update && sudo apt -y upgrade && sudo apt -y install python3-pip
 ```
 
-Install intel gpu driver and libraries (WARNING: if you don't have intel gpu, please skip this part)
+### To Get a Better Performance install Intel GPU driver and libraries
+* NOTE: it works well with Linux Ubuntu 22.04.3 LTS 64-bit
+* WARNING: if you don't have Intel GPU, please skip this part
 ```
 sudo apt -y install intel-opencl-icd opencl-headers ocl-icd-libopencl1 ocl-icd-opencl-dev clinfo && clinfo -l
 ```
