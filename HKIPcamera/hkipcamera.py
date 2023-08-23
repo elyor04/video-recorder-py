@@ -1,111 +1,35 @@
-from os.path import join, dirname
 from ctypes import (
-    CDLL,
-    Structure,
-    c_ubyte,
     c_char,
-    c_ushort,
     c_int,
-    c_uint,
     c_void_p,
     py_object,
     byref,
     POINTER,
     pointer,
     cast,
-    CFUNCTYPE,
 )
-from time import time, sleep
+from .sdk_struct import (
+    NET_DVR_DEVICEINFO_V30,
+    NET_DVR_PREVIEWINFO,
+    FRAME_INFO,
+    LONG,
+    DWORD,
+    BYTE,
+    NULL,
+    T_YV12,
+    NET_DVR_SYSHEAD,
+    NET_DVR_STREAMDATA,
+    EXCEPTION_RECONNECT,
+    IMAGEDATACALLBACK,
+    netSdkPath,
+    playSdkPath,
+    loadLibrary,
+    FUNCTYPE,
+)
 from cv2 import ocl, UMat, cvtColor, COLOR_YUV2BGR_YV12
+from time import time, sleep
 from numpy import frombuffer, uint8
 from typing import Any
-
-BYTE = c_ubyte
-WORD = c_ushort
-LONG = c_int
-DWORD = c_uint
-HWND = c_uint
-
-NULL = 0
-EXCEPTION_RECONNECT = 0x8005
-NET_DVR_SYSHEAD = 1
-NET_DVR_STREAMDATA = 2
-T_YV12 = 3
-
-
-class NET_DVR_DEVICEINFO_V30(Structure):
-    _fields_ = [
-        ("sSerialNumber", BYTE * 48),
-        ("byAlarmInPortNum", BYTE),
-        ("byAlarmOutPortNum", BYTE),
-        ("byDiskNum", BYTE),
-        ("byDVRType", BYTE),
-        ("byChanNum", BYTE),
-        ("byStartChan", BYTE),
-        ("byAudioChanNum", BYTE),
-        ("byIPChanNum", BYTE),
-        ("byZeroChanNum", BYTE),
-        ("byMainProto", BYTE),
-        ("bySubProto", BYTE),
-        ("bySupport", BYTE),
-        ("bySupport1", BYTE),
-        ("bySupport2", BYTE),
-        ("wDevType", WORD),
-        ("bySupport3", BYTE),
-        ("byMultiStreamProto", BYTE),
-        ("byStartDChan", BYTE),
-        ("byStartDTalkChan", BYTE),
-        ("byHighDChanNum", BYTE),
-        ("bySupport4", BYTE),
-        ("byLanguageType", BYTE),
-        ("byVoiceInChanNum", BYTE),
-        ("byStartVoiceInChanNo", BYTE),
-        ("bySupport5", BYTE),
-        ("bySupport6", BYTE),
-        ("byMirrorChanNum", BYTE),
-        ("wStartMirrorChanNo", WORD),
-        ("bySupport7", BYTE),
-        ("byRes2", BYTE),
-    ]
-
-
-class NET_DVR_PREVIEWINFO(Structure):
-    _fields_ = [
-        ("lChannel", LONG),
-        ("dwStreamType", DWORD),
-        ("dwLinkMode", DWORD),
-        ("hPlayWnd", HWND),
-        ("bBlocked", DWORD),
-        ("bPassbackRecord", DWORD),
-        ("byPreviewMode", BYTE),
-        ("byStreamID", BYTE * 32),
-        ("byProtoType", BYTE),
-        ("byRes1", BYTE),
-        ("byVideoCodingType", BYTE),
-        ("dwDisplayBufNum", DWORD),
-        ("byNPQMode", BYTE),
-        ("byRecvMetaData", BYTE),
-        ("byDataType", BYTE),
-        ("byRes", BYTE * 213),
-    ]
-
-
-class FRAME_INFO(Structure):
-    _fields_ = [
-        ("nWidth", LONG),
-        ("nHeight", LONG),
-        ("nStamp", LONG),
-        ("nType", LONG),
-        ("nFrameRate", LONG),
-        ("dwFrameNum", DWORD),
-    ]
-
-
-def _f(bgrUMat: UMat, pUser: Any) -> None:
-    pass
-
-
-IMAGEDATACALLBACK = type(_f)
 
 _hkipc: "HKIPcamera" = None
 
@@ -119,7 +43,7 @@ def yv12toBGRMat(inYv12: POINTER(c_char), width: c_int, height: c_int) -> UMat:
     return cvtColor(UMat(yv12Array), COLOR_YUV2BGR_YV12)
 
 
-@CFUNCTYPE(None, c_int, POINTER(c_char), c_int, POINTER(FRAME_INFO), c_void_p, c_int)
+@FUNCTYPE(None, c_int, POINTER(c_char), c_int, POINTER(FRAME_INFO), c_void_p, c_int)
 def DecCBFun(
     nPort: c_int,
     pBuf: POINTER(c_char),
@@ -141,7 +65,7 @@ def DecCBFun(
         _hkipc.fImageDataCallBack_(bgrUMat, _hkipc.pUser_)
 
 
-@CFUNCTYPE(None, LONG, DWORD, POINTER(BYTE), DWORD, c_void_p)
+@FUNCTYPE(None, LONG, DWORD, POINTER(BYTE), DWORD, c_void_p)
 def fRealDataCallBack(
     lRealHandle: LONG,
     dwDataType: DWORD,
@@ -182,7 +106,7 @@ def fRealDataCallBack(
                 )
 
 
-@CFUNCTYPE(None, DWORD, LONG, LONG, c_void_p)
+@FUNCTYPE(None, DWORD, LONG, LONG, c_void_p)
 def g_ExceptionCallBack(
     dwType: DWORD, user_id_: LONG, lHandle: LONG, pUser: c_void_p
 ) -> None:
@@ -194,10 +118,8 @@ def g_ExceptionCallBack(
 
 class HKIPcamera:
     def __init__(self) -> None:
-        netSdkPath = join(dirname(__file__), "lib", "libhcnetsdk.so")
-        playSdkPath = join(dirname(__file__), "lib", "libPlayCtrl.so")
-        self.netSdk = CDLL(netSdkPath)
-        self.playSdk = CDLL(playSdkPath)
+        self.netSdk = loadLibrary(netSdkPath)
+        self.playSdk = loadLibrary(playSdkPath)
         ocl.setUseOpenCL(True)
 
         self.user_id_ = -1
