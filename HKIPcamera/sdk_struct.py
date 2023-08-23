@@ -135,8 +135,8 @@ class FRAME_INFO(Structure):
     ]
 
 
-def _f(bgrUMat: UMat, pUser: Any) -> None:
+def _func(bgrUMat: UMat, pUser: Any) -> None:
     pass
 
 
-IMAGEDATACALLBACK = type(_f)
+IMAGEDATACALLBACK = type(_func)

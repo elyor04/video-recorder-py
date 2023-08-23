@@ -52,10 +52,6 @@ def DecCBFun(
     pUser: c_void_p,
     nReserved2: c_int,
 ) -> None:
-    global _hkipc
-
-    if _hkipc is None:
-        _hkipc = py_object.from_address(pUser).value
     frameInfo = cast(pFrameInfo, POINTER(FRAME_INFO)).contents
 
     if _hkipc.fImageDataCallBack_ is None:
@@ -73,10 +69,6 @@ def fRealDataCallBack(
     dwBufSize: DWORD,
     pUser: c_void_p,
 ) -> None:
-    global _hkipc
-
-    if _hkipc is None:
-        _hkipc = py_object.from_address(pUser).value
     if lRealHandle != _hkipc.lRealPlayHandle_:
         return
 
@@ -118,9 +110,9 @@ def g_ExceptionCallBack(
 
 class HKIPcamera:
     def __init__(self) -> None:
+        global _hkipc
         self.netSdk = loadLibrary(netSdkPath)
         self.playSdk = loadLibrary(playSdkPath)
-        ocl.setUseOpenCL(True)
 
         self.user_id_ = -1
         self.lRealPlayHandle_ = -1
@@ -131,6 +123,9 @@ class HKIPcamera:
         self.struDeviceInfo_ = NET_DVR_DEVICEINFO_V30()
         self.fImageDataCallBack_ = None
         self.pUser_ = None
+
+        ocl.setUseOpenCL(True)
+        _hkipc = self
 
     def login(
         self,
@@ -181,10 +176,9 @@ class HKIPcamera:
         previewInfo.lChannel = int(self.struDeviceInfo_.byStartDChan) + self.channel_
         previewInfo.dwStreamType = self.streamtype_
         previewInfo.dwLinkMode = self.linkmode_
-        address = cast(pointer(py_object(self)), c_void_p)
 
         self.lRealPlayHandle_ = self.netSdk.NET_DVR_RealPlay_V40(
-            self.user_id_, byref(previewInfo), fRealDataCallBack, address
+            self.user_id_, byref(previewInfo), fRealDataCallBack, NULL
         )
         if self.lRealPlayHandle_ < 0:
             print(

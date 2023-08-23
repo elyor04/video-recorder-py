@@ -27,7 +27,9 @@ def mkdir_cd(path: QDir, dirName: str) -> bool:
 def cvMatToQImage(inMat: UMat) -> QImage:
     height, width, channel = inMat.get().shape
     bytesPerLine = 3 * width
-    qImg = QImage(inMat.get().data, width, height, bytesPerLine, QImage.Format.Format_RGB888)
+    qImg = QImage(
+        inMat.get().data, width, height, bytesPerLine, QImage.Format.Format_RGB888
+    )
     return qImg.rgbSwapped()
 
 
@@ -173,6 +175,9 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
             self.folder.setText(_f)
 
     def startButton_clicked(self) -> None:
+        if not self.success:
+            QMessageBox.about(self, "Record process", "No camera connected")
+            return
         if self.isReady:
             QMessageBox.about(self, "Record process", "Already started")
         elif QFileInfo(self.folder.text()).isDir():
