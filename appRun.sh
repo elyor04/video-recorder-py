@@ -33,4 +33,4 @@ else
     exit 0
 fi
 
-"$py" "$BASE_DIR/main.py" "$@"
+$py "$BASE_DIR/main.py" "$@"
