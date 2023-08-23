@@ -1,5 +1,6 @@
 # hikvision-ip-camera-video-recorder (python)
-### works for linux 64-bit and windows 64-bit (may work for linux 32-bit and windows 32-bit)
+### *works for linux 64-bit and windows 64-bit
+### *may work for linux 32-bit and windows 32-bit
 
 
 <div align="center">
