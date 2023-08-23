@@ -6,5 +6,5 @@
 <a target="_blank" href="https://imageupload.io/VuvH19mjbQ0ZF1B"><img src="https://imageupload.io/ib/sozOPAsTzvKtMot_1692765002.png" alt="Tab-3"/></a><br>
 </div>
 
-## install required libraries
-### [for linux](https://github.com/elyor04/video-recorder-py/blob/main/installation/LINUX.md)
+### Install required libraries
+#### [for linux](https://github.com/elyor04/video-recorder-py/blob/main/installation/LINUX.md)
