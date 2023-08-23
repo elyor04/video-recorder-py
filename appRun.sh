@@ -14,6 +14,7 @@ if [ "$platform" = "Linux" ]; then
         echo "Linux 32-bit"
         export LD_LIBRARY_PATH="$BASE_DIR/HKIPcamera/libs/linux32:$LD_LIBRARY_PATH"
         export LD_LIBRARY_PATH="$BASE_DIR/HKIPcamera/libs/linux32/HCNetSDKCom:$LD_LIBRARY_PATH"
+    python3 "$BASE_DIR/main.py" "$@"
     fi
 elif [ "$platform" = "Windows" ] || [ "$platform" = "Windows_NT" ] || [ "$platform" = "MSYS_NT" ] || [ "$platform" = "CYGWIN" ] || [ "$platform" = "MINGW64_NT" ] || [ "$platform" = "MINGW32_NT" ]; then
     if [ "$arch" = "x86_64" ]; then
@@ -24,10 +25,9 @@ elif [ "$platform" = "Windows" ] || [ "$platform" = "Windows_NT" ] || [ "$platfo
         echo "Windows 32-bit"
         export PATH="$BASE_DIR/HKIPcamera/libs/win32:$PATH"
         export PATH="$BASE_DIR/HKIPcamera/libs/win32/HCNetSDKCom:$PATH"
+    python "$BASE_DIR/main.py" "$@"
     fi
 else
     echo "Hikvision Net SDK does not support this platform"
     exit 0
 fi
-
-python3 "$BASE_DIR/main.py" "$@"
