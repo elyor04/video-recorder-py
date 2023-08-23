@@ -1,9 +1,9 @@
 # hikvision-ip-camera-video-recorder (python)
 
 <div align="center">
-<a target="_blank" href="https://imageupload.io/Rr93OYUJi0R2DvQ"><img src="https://imageupload.io/ib/9PNKrXNMNINC2RE_1692763615.png" alt="Tab-1"/></a>
-<a target="_blank" href="https://imageupload.io/NN2b4kaSKYXlj1i"><img src="https://imageupload.io/ib/LeJ3VllgmUzbDE0_1692763615.png" alt="Tab-2"/></a>
-<a target="_blank" href="https://imageupload.io/FneWZ5oLzPDieBK"><img src="https://imageupload.io/ib/EAZPqOJzdYgcVYr_1692763614.png" alt="Tab-3"/></a>
+<a target="_blank" href="https://imageupload.io/VuvH19mjbQ0ZF1B"><img src="https://imageupload.io/ib/sozOPAsTzvKtMot_1692765002.png" alt="Tab-1"/></a><br>
+<a target="_blank" href="https://imageupload.io/hfiiKypQbnwSK3G"><img src="https://imageupload.io/ib/3Gmcv7Tk6x48vJn_1692765002.png" alt="Tab-2"/></a><br>
+<a target="_blank" href="https://imageupload.io/D84WNVQvHhvGOWg"><img src="https://imageupload.io/ib/2C8KQqXqwpfOBvI_1692765002.png" alt="Tab-3"/></a><br>
 </div>
 
 ## install required libraries
