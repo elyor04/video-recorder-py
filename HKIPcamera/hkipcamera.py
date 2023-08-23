@@ -21,10 +21,10 @@ from .sdk_struct import (
     NET_DVR_STREAMDATA,
     EXCEPTION_RECONNECT,
     IMAGEDATACALLBACK,
+    FUNCTYPE,
+    loadLibrary,
     netSdkPath,
     playSdkPath,
-    loadLibrary,
-    FUNCTYPE,
 )
 from cv2 import ocl, UMat, cvtColor, COLOR_YUV2BGR_YV12
 from time import time, sleep
