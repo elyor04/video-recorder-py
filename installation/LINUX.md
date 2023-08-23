@@ -1,18 +1,18 @@
 ## To install required libraries
 
-Open your terminal and go to home directory
+Update your system and install pip
 ```
-cd ~
-```
-
-Update your system
-```
-sudo apt-get update && sudo apt-get -y upgrade
+sudo apt update && sudo apt -y upgrade && sudo apt -y install python3-pip
 ```
 
 Install intel gpu driver and libraries (WARNING: if you don't have intel gpu, please skip this part)
 ```
 sudo apt-get -y install intel-opencl-icd opencl-headers ocl-icd-libopencl1 ocl-icd-opencl-dev clinfo && clinfo -l
+```
+
+Install the libraries
+```
+pip3 install --upgrade numpy opencv-python PyQt6-sip=<13.4.5 PyQt6-Qt6=<6.4.5 PyQt6=<6.4.5
 ```
 
 Install dependencies
@@ -43,9 +43,4 @@ make -j$(nproc) && sudo make install && cd ~
 Verify OpenCV Installation
 ```
 python3 -c "import cv2; print(cv2.__version__)"
-```
-
-Install PyQt6 library
-```
-pip3 install --upgrade PyQt6-sip==13.4.1 PyQt6-Qt6==6.4.2 PyQt6==6.4.2
 ```
