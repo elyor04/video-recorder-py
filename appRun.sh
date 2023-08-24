@@ -2,7 +2,7 @@
 
 BASE_DIR=$(dirname "$(readlink -f "$0")")
 
-platform=$(uname -s | grep "^[a-zA-Z0-9_]*")
+platform=$(uname -s | grep -o "^[a-zA-Z0-9_]*")
 arch=$(uname -m)
 
 if [ "$platform" = "Linux" ]; then
