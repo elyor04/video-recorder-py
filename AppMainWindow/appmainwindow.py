@@ -27,9 +27,7 @@ def mkdir_cd(path: QDir, dirName: str) -> bool:
 def cvMatToQImage(inMat: Mat) -> QImage:
     height, width, channel = inMat.shape
     bytesPerLine = 3 * width
-    qImg = QImage(
-        inMat.data, width, height, bytesPerLine, QImage.Format.Format_RGB888
-    )
+    qImg = QImage(inMat.data, width, height, bytesPerLine, QImage.Format.Format_RGB888)
     return qImg.rgbSwapped()
 
 
