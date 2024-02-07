@@ -1,15 +1,7 @@
-from ctypes import (
-    Structure,
-    c_ubyte,
-    c_ushort,
-    c_int,
-    c_uint,
-)
-from cv2 import UMat
+from ctypes import Structure, c_ubyte, c_int, c_uint, c_char_p
 from platform import system, architecture
 from os.path import join, dirname
 from re import findall
-from typing import Any
 
 
 def get_platform_info():
@@ -55,19 +47,11 @@ netSdkPath = netSdkPath_dict[system_type]
 playSdkPath = playSdkPath_dict[system_type]
 
 BYTE = c_ubyte
-WORD = c_ushort
 LONG = c_int
-DWORD = c_uint
 HWND = c_uint
 
-NULL = 0
-EXCEPTION_RECONNECT = 0x8005
-NET_DVR_SYSHEAD = 1
-NET_DVR_STREAMDATA = 2
-T_YV12 = 3
 
-
-class NET_DVR_DEVICEINFO_V30(Structure):
+class NET_DVR_DEVICEINFO(Structure):
     _fields_ = [
         ("sSerialNumber", BYTE * 48),
         ("byAlarmInPortNum", BYTE),
@@ -76,67 +60,15 @@ class NET_DVR_DEVICEINFO_V30(Structure):
         ("byDVRType", BYTE),
         ("byChanNum", BYTE),
         ("byStartChan", BYTE),
-        ("byAudioChanNum", BYTE),
-        ("byIPChanNum", BYTE),
-        ("byZeroChanNum", BYTE),
-        ("byMainProto", BYTE),
-        ("bySubProto", BYTE),
-        ("bySupport", BYTE),
-        ("bySupport1", BYTE),
-        ("bySupport2", BYTE),
-        ("wDevType", WORD),
-        ("bySupport3", BYTE),
-        ("byMultiStreamProto", BYTE),
-        ("byStartDChan", BYTE),
-        ("byStartDTalkChan", BYTE),
-        ("byHighDChanNum", BYTE),
-        ("bySupport4", BYTE),
-        ("byLanguageType", BYTE),
-        ("byVoiceInChanNum", BYTE),
-        ("byStartVoiceInChanNo", BYTE),
-        ("bySupport5", BYTE),
-        ("bySupport6", BYTE),
-        ("byMirrorChanNum", BYTE),
-        ("wStartMirrorChanNo", WORD),
-        ("bySupport7", BYTE),
-        ("byRes2", BYTE),
     ]
 
 
-class NET_DVR_PREVIEWINFO(Structure):
+class NET_DVR_CLIENTINFO(Structure):
     _fields_ = [
         ("lChannel", LONG),
-        ("dwStreamType", DWORD),
-        ("dwLinkMode", DWORD),
+        ("lLinkMode", LONG),
         ("hPlayWnd", HWND),
-        ("bBlocked", DWORD),
-        ("bPassbackRecord", DWORD),
-        ("byPreviewMode", BYTE),
-        ("byStreamID", BYTE * 32),
+        ("sMultiCastIP", c_char_p),
         ("byProtoType", BYTE),
-        ("byRes1", BYTE),
-        ("byVideoCodingType", BYTE),
-        ("dwDisplayBufNum", DWORD),
-        ("byNPQMode", BYTE),
-        ("byRecvMetaData", BYTE),
-        ("byDataType", BYTE),
-        ("byRes", BYTE * 213),
+        ("byRes", BYTE * 3),
     ]
-
-
-class FRAME_INFO(Structure):
-    _fields_ = [
-        ("nWidth", LONG),
-        ("nHeight", LONG),
-        ("nStamp", LONG),
-        ("nType", LONG),
-        ("nFrameRate", LONG),
-        ("dwFrameNum", DWORD),
-    ]
-
-
-def _func(bgrUMat: UMat, pUser: Any) -> None:
-    pass
-
-
-IMAGEDATACALLBACK = type(_func)

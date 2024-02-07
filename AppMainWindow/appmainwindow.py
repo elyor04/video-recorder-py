@@ -1,6 +1,7 @@
 """
 pyuic6 -o AppMainWindow/ui_form.py "path/to/file.ui"
 """
+
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -11,12 +12,11 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QFileDialog,
 )
-from PyQt6.QtGui import QImage, QPixmap, QAction
+from PyQt6.QtGui import QAction
 from PyQt6.QtCore import QDir, QTimer, QDateTime, QFileInfo
 from .ui_form import Ui_MainWindow
 from HKIPcamera import HKIPcamera
-from cv2 import ocl, VideoWriter, UMat, Mat, resize, INTER_AREA
-from sys import exit as sys_exit, argv as sys_argv
+import sys
 
 
 def mkdir_cd(path: QDir, dirName: str) -> bool:
@@ -24,81 +24,27 @@ def mkdir_cd(path: QDir, dirName: str) -> bool:
     return path.cd(dirName)
 
 
-def cvMatToQImage(inMat: Mat) -> QImage:
-    height, width, channel = inMat.shape
-    bytesPerLine = 3 * width
-    qImg = QImage(inMat.data, width, height, bytesPerLine, QImage.Format.Format_RGB888)
-    return qImg.rgbSwapped()
-
-
-def cvMatToQPixmap(inMat: Mat) -> QPixmap:
-    return QPixmap.fromImage(cvMatToQImage(inMat))
-
-
-def f_ImageDataCallBack(bgrUMat: UMat, myWin: "AppMainWindow") -> None:
-    height, width, channel = bgrUMat.get().shape
-
-    if myWin.reOpen:
-        if myWin.writer.isOpened():
-            myWin.writer.release()
-        myWin.reOpen = False
-
-    if myWin.isReady:
-        if not myWin.writer.isOpened():
-            myDir = QDir(myWin.recDir)
-            now = QDateTime.currentDateTime()
-
-            mkdir_cd(myDir, now.toString("yyyy"))
-            mkdir_cd(myDir, now.toString("MM"))
-            mkdir_cd(myDir, now.toString("dd"))
-
-            myFile = myDir.filePath(now.toString("hh_mm_ss") + ".mp4")
-            codec = VideoWriter.fourcc(*"mp4v")
-            fps = 25
-            frameSize = (width, height)
-
-            myWin.writer.open(myFile, codec, fps, frameSize)
-
-        else:
-            myWin.writer.write(bgrUMat)
-
-    elif myWin.writer.isOpened():
-        myWin.writer.release()
-
-    if myWin.tabWidget.currentIndex() == 1:
-        bgrMat = resize(
-            bgrUMat,
-            (myWin.videoLabel.width(), myWin.videoLabel.height()),
-            interpolation=INTER_AREA,
-        ).get()
-        myWin.videoLabel.setPixmap(cvMatToQPixmap(bgrMat))
-
-
 class AppMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
 
         self.hkipc = HKIPcamera()
-        self.writer = VideoWriter()
 
         self.trayIcon = QSystemTrayIcon(self)
         self.myTm = QTimer(self)
         self.recDir = str()
 
-        self.isReady = False
+        self.isStarted = False
         self.success = False
-        self.reOpen = False
 
         self.setupUi(self)
         self._init()
-        ocl.setUseOpenCL(True)
 
     def __del__(self) -> None:
         self.hkipc.release()
-        self.writer.release()
 
     def _init(self) -> None:
-        self.ipAddress.setText("192.168.64.12")
+        self.ipAddress.setText("192.168.11.250")
         self.userName.setText("admin")
         self.password.setText("abcd1234")
         self.port.setText("8000")
@@ -107,6 +53,7 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
         self.browseTB.clicked.connect(self.browseTB_clicked)
         self.startButton.clicked.connect(self.startButton_clicked)
         self.stopButton.clicked.connect(self.stopButton_clicked)
+        self.myTm.timeout.connect(self.refreshRecording)
 
         def quitAction():
             self.trayIcon.hide()
@@ -132,30 +79,35 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
         self.trayIcon.activated.connect(activatedIcon)
         self.trayIcon.show()
 
-        def myTimer():
-            if self.isReady:
-                now = QDateTime.currentDateTime()
-                sec = self.duration.value() * 60 - int(now.toString("ss"))
-                self.myTm.start((sec + 1) * 1000)
-                self.reOpen = True
-            else:
-                self.myTm.start(10)
+    def refreshRecording(self) -> None:
+        if self.isStarted:
+            myDir = QDir(self.folder.text())
+            now = QDateTime.currentDateTime()
 
-        self.myTm.timeout.connect(myTimer)
-        self.myTm.start(10)
+            mkdir_cd(myDir, now.toString("yyyy"))
+            mkdir_cd(myDir, now.toString("MM"))
+            mkdir_cd(myDir, now.toString("dd"))
+
+            myFile = myDir.filePath(now.toString("hh_mm_ss") + ".mp4")
+            self.hkipc.saveRealData(myFile)
+
+            sec = self.duration.value() * 60 - int(now.toString("ss"))
+            self.myTm.start((sec + 1) * 1000)
+
+        else:
+            self.hkipc.stopSaveRealData()
+            self.myTm.stop()
 
     def okButton_clicked(self) -> None:
-        if self.success:
-            self.hkipc.release()
-            self.success = False
+        self.hkipc.release()
+        self.hkipc.init()
 
         if self.hkipc.login(
             self.ipAddress.text(),
             self.userName.text(),
             self.password.text(),
             int(self.port.text()),
-        ):
-            self.hkipc.setImageDataCallBack(f_ImageDataCallBack, self)
+        ) and self.hkipc.realPlay(int(self.videoLabel.winId())):
             self.success = True
             QMessageBox.information(
                 self, "Start process", "Success\nYou can go to another page"
@@ -176,11 +128,12 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
         if not self.success:
             QMessageBox.about(self, "Record process", "No camera connected")
             return
-        if self.isReady:
+        if self.isStarted:
             QMessageBox.about(self, "Record process", "Already started")
+
         elif QFileInfo(self.folder.text()).isDir():
-            self.recDir = self.folder.text()
-            self.isReady = True
+            self.isStarted = True
+            self.refreshRecording()
             QMessageBox.information(
                 self, "Record process", "Success\nRecording started"
             )
@@ -188,8 +141,9 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.warning(self, "Record process", "Error\nInvalid folder")
 
     def stopButton_clicked(self) -> None:
-        if self.isReady:
-            self.isReady = False
+        if self.isStarted:
+            self.isStarted = False
+            self.refreshRecording()
             QMessageBox.information(
                 self, "Record process", "Success\nRecording stopped"
             )
@@ -198,7 +152,7 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys_argv)
+    app = QApplication(sys.argv)
     win = AppMainWindow()
     win.show()
-    sys_exit(app.exec())
+    sys.exit(app.exec())
