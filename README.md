@@ -1,5 +1,5 @@
 # hikvision-ip-camera-video-recorder (python)
-### works on linux and windows
+* ### Works on Linux and Windows
 
 
 <div align="center">
