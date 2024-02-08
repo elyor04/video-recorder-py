@@ -7,7 +7,6 @@ class HKIPcamera:
         self.netSdk = loadLibrary(netSdkPath)
         self.userId = -1
         self.realPlayHandle = -1
-        self.init()
 
     def init(self) -> bool:
         return bool(self.netSdk.NET_DVR_Init())
