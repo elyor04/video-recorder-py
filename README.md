@@ -35,5 +35,5 @@ pip install opencv-python PyQt6
 
 ### Install required libraries
 ```
-pip install --upgrade numpy opencv-python "PyQt6-sip<13.5" "PyQt6-Qt6<6.5" "PyQt6<6.5"
+pip install opencv-python PyQt6
 ```
