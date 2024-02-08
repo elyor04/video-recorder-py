@@ -11,29 +11,9 @@
 </div>
 
 
-## Install on Linux
+## Installation
 
-### Update your system and install pip
+### Install required library
 ```
-sudo apt update && sudo apt -y upgrade && sudo apt -y install python3-pip
-```
-
-### To get a better performance install Intel GPU driver and libraries
-* WARNING: if you don't have Intel GPU, please skip this part
-* NOTE: it's working well with Linux Ubuntu 22.04.3 LTS 64-bit
-```
-sudo apt -y install intel-opencl-icd opencl-headers ocl-icd-libopencl1 ocl-icd-opencl-dev
-```
-
-### Install required libraries
-```
-pip install opencv-python PyQt6
-```
-
-
-## Install on Windows
-
-### Install required libraries
-```
-pip install opencv-python PyQt6
+pip install PyQt6
 ```
