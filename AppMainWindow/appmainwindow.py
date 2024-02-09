@@ -12,10 +12,11 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QFileDialog,
 )
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtCore import QDir, QTimer, QDateTime, QFileInfo
 from .ui_form import Ui_MainWindow
 from HKIPcamera import HKIPcamera
+from os.path import join, dirname
 import sys
 
 
@@ -65,8 +66,7 @@ class AppMainWindow(QMainWindow, Ui_MainWindow):
         icon_m.addSeparator()
         icon_m.addAction(QAction("Quit", self, triggered=quitAction))
 
-        qSP = QStyle.StandardPixmap
-        icon_i = self.style().standardIcon(qSP.SP_FileDialogListView)
+        icon_i = QIcon(join(dirname(__file__), "resources", "icon.png"))
 
         def activatedIcon(reason):
             qAR = QSystemTrayIcon.ActivationReason
